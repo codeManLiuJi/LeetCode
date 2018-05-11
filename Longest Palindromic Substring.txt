@@ -1,0 +1,62 @@
+public class Solution {
+    int len = 0, maxLength = 0, init = 0;	//初始化字符串长度，最大回文串长度，最大回文串初始引脚
+    public String longestPalindrome(String s){
+        char[] chars = s.toCharArray();	
+        len = s.length();
+        if (len <= 1) return s;	//如果字符串只有一个字符或者为空，则直接返回
+        
+        for (int i = 0; i < len; i++) {
+            i = manacher(chars, i);
+        }
+        
+        return s.substring(init, init + maxLength);
+    }
+    
+    public int manacher(char[] chars, int k) {	//扩展以 k为中心的最大回文字符串
+        int i = k - 1, j = k;	
+        while (j < len - 1 && chars[j] == chars[j + 1]) j++;	//如果K和相邻字符相等，则扩展字符串并且改变中心
+        int nextCenter = j++;	//下一个需要扩展的回文串中心起码从相等字符之后开始
+        while (i >= 0 && j < len && chars[i] == chars[j]){		//扩展完相等字符和改变中心后，再扩展回文串	
+            i--;
+            j++;
+        }
+        if (j - i - 1 > maxLength) {	//更新最大回文串
+            maxLength = j - i - 1;
+            init = i + 1;				//记录初始引脚
+        }
+        return nextCenter;	//返回下一个需要扩展的中心
+    }
+}
+——————————————————————————————————————————————————————————————————————
+public String longestPalindrome(String s){
+		int maxlen = 0, h = -1;
+		char[] ch = s.toCharArray();
+		StringBuilder builder = new StringBuilder();
+		for(int i=0;i<ch.length;i++){
+			builder.append("#"+ch[i]);
+		}
+		s = builder.append("#").toString();		//原字符串中每个字符间插入一个#，保证回文字符串肯定是奇数
+		int MaxRight = 0;	//定义访问过的最右端回文字符串位置
+		int pos = 0;	//定义访问最右端回文字符串的中间位置
+		int[] rl = new int[s.length()];	//保存每个字符所对应的回文串的回文半径
+		
+		for(int i=0;i<s.length();i++) {
+			if(i<MaxRight){
+				rl[i] = Math.min(rl[pos*2-i],MaxRight-i);	//如果在ManRight的左边，则直接赋值已经访问过的回文串
+			}else {
+				rl[i]=1;	//若在ManRitht右边则说明无访问过的回文字符串，则赋初始值1
+			}
+			while(i>=rl[i] && i+rl[i]<s.length() && (s.charAt(i-rl[i])==s.charAt(i+rl[i]))) {
+				rl[i]++;	//从已经赋值的回文半径开始扩展到最大的回文字符串
+			}
+			if (i+rl[i]-1 > MaxRight) {	//更新MaxRight
+				MaxRight = i+rl[i]-1;
+				pos = i;
+			}
+			if(maxlen != rl[i]-1) {	//更新maxlen和最长回文串的中心引脚
+				maxlen = Math.max(maxlen,rl[i]-1);
+				h = maxlen==(rl[i]-1)? i : h;
+			}
+		}
+		return s.substring(h-rl[h]+1,h+rl[h]).replaceAll("#","");
+}

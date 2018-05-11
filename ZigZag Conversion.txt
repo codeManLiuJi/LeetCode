@@ -1,0 +1,74 @@
+class Solution {
+    public String convert(String s, int numRows) {
+    	if(numRows==1) {
+    		return s;
+    	}
+    	StringBuilder[] builders = new StringBuilder[numRows];
+    	for(int i =0;i<numRows;i++) {
+    		builders[i] = new StringBuilder();
+    	}
+        int num = 2*numRows-2;
+    	int n = s.length()/num;
+    	int index = 0;
+    	for(int i=0;i<n;i++){
+			for(int p=0;p<numRows;p++){
+				builders[p].append(s.charAt(index));
+				index++;
+			}
+			for(int p=numRows-2;p>0;p--){
+				builders[p].append(s.charAt(index));
+				index++;
+			}
+    	}
+    	int i = 0;
+    	while(index < s.length() && i<numRows){
+    		builders[i].append(s.charAt(index));
+            index++;
+    		i++;
+    	}
+    	i = numRows-2;
+    	while(index< s.length()) {
+    		builders[i].append(s.charAt(index));
+            index++;
+    		i--;
+    	}
+    	String ans = "";
+    	for(int j=0;j<numRows;j++) {
+    		ans += builders[j].toString();
+    	}
+    	return ans;
+    }
+}
+
+！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！
+class Solution {
+	public static void main(String args[]) {
+		String s = "A";
+		Solution test = new Solution();
+		System.out.println(test.convert(s,1));
+	}
+    public String convert(String s, int numRows) {
+    	StringBuilder builder = new StringBuilder();
+    	int index,num = 2*numRows-2;
+    	if(numRows==1) {
+    		return s;
+    	}
+    	for(int i=0;i<numRows;i++){
+    		if( i==0 || i==numRows-1) {
+	    		for(index=i;index<s.length();index+=num){
+	    			builder.append(s.charAt(index));
+	    		}
+    		}else {
+    			for(index=i;index<s.length();index+=num) {
+    				builder.append(s.charAt(index));
+    				int indexNum = 2*(numRows-i-1);
+    				if(index+indexNum < s.length()){
+    					builder.append(s.charAt(index+indexNum));
+    				}
+    			}
+    		}
+    	}
+    	String ans = builder.toString();
+    	return ans;
+    }
+}

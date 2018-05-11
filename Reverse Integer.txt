@@ -1,0 +1,15 @@
+class Solution{
+     public int reverse(int x) {
+        int ans=0,pre = 0;
+        while(Math.abs(x)>0){
+        	int num = x%10;
+            	pre = ans;
+        	ans = ans*10+num;
+        	if((ans - num)/10 != pre){
+        		return 0;
+        	}
+        	x=x/10;
+        }
+    	return ans;
+    }
+}

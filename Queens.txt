@@ -1,0 +1,22 @@
+void Queens(int k) {
+		for(int i = 0 ; i<n ; i++) {
+			if(canPlace(k,i)) {
+				queenRow[k] = i;
+				if(k==n-1) {
+					for(int j=0;j<n;j++) {
+						System.out.print("  "+queenRow[j]);
+					}
+					System.out.println();
+				}
+				else Queens(k+1);
+			}
+		}
+	}
+	boolean canPlace(int k,int i) {
+		for(int j=0;j<k;j++) {
+			if(queenRow[j] == i || Math.abs(queenRow[j]-i) == Math.abs(k-j)) {
+				return false;
+			}
+		}
+		return true;
+	}

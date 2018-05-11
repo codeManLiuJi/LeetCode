@@ -1,0 +1,48 @@
+// Symbol	I	V	X	L	C	D	M
+// Value	1	5	10	50	100	500	1,000
+// 字母可以重复，但不超过三次，当需要超过三次时，用与下一位的组合表示：
+// I: 1, II: 2, III: 3, IV: 4
+// C: 100, CC: 200, CCC: 300, CD: 400
+// 
+// [解题思路 #1]
+// 这道题主要就在于如何处理每一位digit，并且按照区间不同处理：
+// 1<=digit <=3
+// digit =4
+// digit = 5
+// 5<digit<=8
+// digit =9
+// 
+// [解题思路 #2]
+// 可以将单个罗马字符扩展成组合形式，来避免需要额外处理类似IX这种特殊情况。
+// I: 1
+// IV: 4
+// V: 5
+// IX: 9
+// X: 10
+// XL: 40
+// L: 50
+// XC: 90
+// C: 100
+// CD: 400
+// D: 500
+// CM: 900
+// M: 1000
+
+public class Solution {
+    public String intToRoman(int num) {
+        if(num <= 0) 
+            return "";
+        String[] roman = {"M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V","IV", "I"};
+        int[]     nums = {1000, 900, 500, 400,  100,  90,   50,  40,  10,  9,   5 , 4, 1};
+        StringBuilder sb = new StringBuilder();
+        for(int i=0; i<nums.length; i++) {
+            int count = num/nums[i];
+            while(count > 0) {
+                sb.append(roman[i]);
+                count--;
+            }
+            num %= nums[i];
+        }
+        return sb.toString();
+    }
+}

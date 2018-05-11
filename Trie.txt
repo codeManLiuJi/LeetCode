@@ -1,0 +1,92 @@
+import java.util.HashMap;
+import java.util.Scanner;
+//Trie Test
+public class Main {
+	public static void main(String args[]) {
+		Scanner in = new Scanner(System.in);
+		Trie tree = new Trie(new TrieNode());
+		int size = Integer.parseInt(in.nextLine());
+		for(int i =0 ; i<size ; i++) {
+			String word = in.nextLine();
+			tree.addWord(word);
+		}
+		int n = Integer.parseInt(in.nextLine());
+		for(int i = 0;i<n;i++) {
+			String word = in.nextLine();
+			TrieNode wordNode = tree.findWord(word);
+			if(wordNode!=null)System.out.println(wordNode.getNum());
+			else	System.out.println(0);
+		}
+		in.close();	
+	}
+}
+
+
+class TrieNode{
+	TrieNode() {
+		num = 0;
+		isTrie = false;
+		next = new HashMap<Character,TrieNode>();
+	}
+	void setTrie() {
+		isTrie = true;
+	}
+	boolean isTrie() {
+		return isTrie;
+	}
+	int getNum(){
+		return num;
+	}
+	void addNum(){
+		num++;
+	}
+	boolean hasNext(char word) {
+		if (next.containsKey(word))return true;
+		else 
+			return false;
+	}
+	void setNext(char word) {
+		if(!hasNext(word))next.put(word,new TrieNode());
+	}
+	TrieNode getNext(char word) {
+		return next.get(word); 
+	}
+	int num;
+	boolean isTrie;
+	HashMap<Character,TrieNode> next;
+}
+
+class Trie{
+	Trie(TrieNode tool){
+		this.tool = tool;
+	}
+	void setCurrent(TrieNode current) {
+		this.current = current;
+	}
+	void addWord(String word){
+		char words[] = word.toCharArray();
+		setCurrent(tool);
+		for(int i = 0; i<words.length ;i++){
+			current.addNum();
+			if(!current.hasNext(words[i])){
+				current.setNext(words[i]);
+			}
+			setCurrent(current.getNext(words[i]));
+			if(i==words.length-1) {
+				current.setTrie();
+				current.addNum();
+			}
+		}
+	}
+	TrieNode findWord(String word){
+		setCurrent(tool);
+		char words[] = word.toCharArray();
+		for(int i = 0 ; i<words.length ; i++) {
+			if(current.hasNext(words[i]))setCurrent(current.getNext(words[i]));
+			else
+				return null;
+		}
+		return current;
+	}
+	TrieNode tool,current;
+}

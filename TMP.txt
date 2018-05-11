@@ -1,0 +1,92 @@
+
+
+import java.util.ArrayList;
+import java.util.Scanner;
+
+public class Main {
+	public static void main(String[] args) {
+		Scanner in = new Scanner(System.in);
+		countNum cNum;
+		int n = Integer.parseInt(in.nextLine());
+		for(int i =0 ;i<n;i++) {
+			String pString = in.nextLine();
+			String sString = in.nextLine();
+			cNum = new countNum(pString, sString);
+			System.out.println(cNum.getNum());
+		}
+	}
+}
+class countNum{
+	countNum(String pString,String sString){
+		p = pString.toCharArray();
+		s = sString.toCharArray();
+		pFail = new Fail(pString);
+		idex = new ArrayList<Integer>();
+		num = 0;
+		count();
+	}
+	private void count(){
+		int i=0,j=0;
+		while(i<p.length && j<s.length){
+			if(p[i] == s[j]){
+				i++;
+				j++;
+			}else if(i == 0){
+				j++;
+			}else {
+				i = pFail.f(i-1)+1;
+			}
+			if(i == p.length) {
+				num++;
+				idex.add(j-i);
+				i = pFail.f(i-1)+1;
+			}
+		}
+	}
+	public int getNum() {
+		return num;
+	}
+	int num;
+	char[] p;
+	char[] s;
+	ArrayList<Integer> idex;
+	Fail pFail;
+}
+
+class Fail{
+	//构造并且计算失败函数
+	Fail(String pString) {
+		char[] p = pString.toCharArray();
+		f = new int[p.length];
+		fail(p);
+	}
+	private void fail(char[] p){				//失败函数fail,p下一次匹配指向fail+1
+		f[0] = -1;			//初始化f[0]为-1
+		int i;
+		for(int j = 1; j<p.length ; j++ ) {		//递推计算每一个fail值,由f[0]-f[j-1]求f[j]
+			i = f[j-1];						//求f[j]先求出f[j-1]
+			while(p[j]!=p[i+1] && i>0){		//在f[j-1]的串中找到最大的满足p[j] == p[i+1]的匹配串
+				i = f[i];
+			}
+			if(p[j] == p[i+1]) {	//如果找到则已经求出f[j]
+				f[j] = i+1;
+			}else	f[j] = -1;		//如果没找到则f[j]不存在
+		}
+	}
+	//取出失败函数值
+	public int f(int i){
+		if(i<f.length)
+			return f[i];
+		else
+			return -2;
+	}
+	//显示所有失败函数值
+	public void showValues() {
+		for(int i = 0 ; i<f.length ; i++) {
+			System.out.print(" "+f[i]);
+		}
+		System.out.println();
+	}
+	int[] f;
+}
+
